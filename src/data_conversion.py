@@ -44,8 +44,8 @@ def binary_to_decimal(n, big_endian=False, signed=True):
         value += int(n[i]) * 2**(i)
     
     # Get value of MSB if signed
-    msb = 2**(len(n) - 1)
-    if signed:
+    msb = int(n[-1]) * 2**(len(n) - 1)
+    if msb and signed:
         msb *= -1
     value += msb
 
