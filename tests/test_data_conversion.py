@@ -5,11 +5,11 @@ from data_conversion import *
 class TestDataConversion(unittest.TestCase):
     
     def test_bytes_to_binary(self):
-        self.assertEqual(bytes_to_binary(b'\x00\x01\x02\x03\x04', '0000000000000001000000100000001100000100'))
-        self.assertEqual(bytes_to_binary(b'\xff\x04', '1111111100000100'))
-        self.assertEqual(bytes_to_binary(b'\xf0', '11110000'))
-        self.assertEqual(bytes_to_binary(b'', ''))
-        self.assertEqual(bytes_to_binary(None, ''))
+        self.assertEqual(bytes_to_binary(b'\x00\x01\x02\x03\x04'), '0000000000000001000000100000001100000100')
+        self.assertEqual(bytes_to_binary(b'\xff\x04'), '1111111100000100')
+        self.assertEqual(bytes_to_binary(b'\xf0'), '11110000')
+        self.assertEqual(bytes_to_binary(b''), '')
+        self.assertEqual(bytes_to_binary(None), '')
     
     def test_binary_to_decimal(self):
         # Test little-endian signed numbers
@@ -60,14 +60,14 @@ class TestDataConversion(unittest.TestCase):
         # Test big-endian unsigned numbers
         bin_string = '1'
         for i in range(16):
-            self.assertEqual(binary_to_decimal(bin_string, big_endian=True, signed=False), -2**i)
+            self.assertEqual(binary_to_decimal(bin_string, big_endian=True, signed=False), 2**i)
             bin_string = bin_string + '0'
 
         bin_string = '0101' # 5
         self.assertEqual(binary_to_decimal(bin_string, big_endian=True, signed=False), 5)
 
-        bin_string = '1100' # 10
-        self.assertEqual(binary_to_decimal(bin_string, big_endian=True, signed=False), 10)
+        bin_string = '1100' # 12
+        self.assertEqual(binary_to_decimal(bin_string, big_endian=True, signed=False), 12)
 
         bin_string = ''
         self.assertEqual(binary_to_decimal(bin_string, big_endian=True, signed=False), 0)
