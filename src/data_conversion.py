@@ -2,6 +2,9 @@
 
 def bytes_to_binary(data):
     # Converts bytes object to binary string
+    if data == None or data == b'':
+        return ''
+
     hex_to_bin = {
         '0': '0000',
         '1': '0001',
@@ -33,6 +36,8 @@ def bytes_to_binary(data):
 
 def binary_to_decimal(n, big_endian=False, signed=True):
     # Converts binary string to decimal
+    if n == '':
+        return 0
     value = 0
 
     # Convert to 'big endian' format if originally little endian
