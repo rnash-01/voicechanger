@@ -9,7 +9,9 @@ def frames_from_binary(string, file_params):
     channels, sampwidth = file_params
     sampwidth_bits = sampwidth * 8
     strlen = len(string)
-    
+    if (strlen == 0):
+        return None
+
     # Check that there is actually an even split
     if strlen/(channels * sampwidth_bits) != strlen//(channels * sampwidth_bits):
         raise Exception('Binary string cannot be split evenly')
@@ -18,7 +20,7 @@ def frames_from_binary(string, file_params):
     # [[channel1_string, channel2_string, ..., channel_n_string], ...]
     # (an array containing one array for each frame, with one string for each channel)
     nframes = strlen//(channels * sampwidth_bits)
-    frames = np.empty((nframes, channels), dtype=np.int8)
+    frames = np.empty((nframes, channels), np.int32)
 
     for i in range(nframes):
         frame_string = string[i * channels * sampwidth_bits:(i+1) * channels * sampwidth_bits]
