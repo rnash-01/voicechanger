@@ -1,5 +1,6 @@
 # Following snippet from: https://stackoverflow.com/a/1897665
 import unittest
+from wave import Wave_read
 import set_test_env
 from audio import *
 
@@ -37,10 +38,28 @@ class TestAudio(unittest.TestCase):
 
 
     def test_open_file(self):
-        pass
+        
+        # Make sure that it CAN open an existing file
+        file = open_file('assets/sine.wav')
+        self.assertIsNotNone(file)
+        self.assertIsInstance(file, Wave_read)
+        file.close()
+
+        # Make sure it returns None if file does not exist
+        file = open_file('i_don\'t_exist.wav')
+        self.assertIsNone(file)
 
     def test_read(self):
-        pass
+        # Make sure it can read from a valid file
+        file = wave.open('assets/sine.wav')
+        SAMPWIDTH = file.getsampwidth()
+        CHANNELS = file.getnchannels()
+        frames = read(file, 1)
+        self.assertIsNotNone(frames)
+        self.assertIsInstance(frames, np.ndarray)
+        self.assertEqual(frames.shape, (1, CHANNELS))
+        
+
 
 if __name__ == '__main__':
     unittest.main()
