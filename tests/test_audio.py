@@ -4,6 +4,9 @@ from wave import Wave_read
 import set_test_env
 from audio import *
 
+# Ensure that random operations are consistent
+np.random.seed(0.0)
+
 class TestAudio(unittest.TestCase):
     
     def test_frames_from_binary(self):
@@ -58,7 +61,6 @@ class TestAudio(unittest.TestCase):
         self.assertIsNotNone(frames)
         self.assertIsInstance(frames, np.ndarray)
         self.assertEqual(frames.shape, (1, CHANNELS))
-        
 
 
 if __name__ == '__main__':

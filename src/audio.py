@@ -38,8 +38,8 @@ def open_file(file):
 
 def read(file, nframes):
     # Gets byte data from file and converts it to numpy array
-    # file - open Wave_read object
-    # t - length of time in seconds to extract from file
+    # file  -- open Wave_read object
+    # t     -- length of time in seconds to extract from file
     NFRAMES = file.getnframes()         # Total number of frames in the file
     CHANNELS = file.getnchannels()      # Number of audio channels
     SAMPWIDTH = file.getsampwidth()     # Bytes per sample
