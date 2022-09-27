@@ -12,7 +12,7 @@ def spectrogram_timestep(data, samp_rate):
     # of channels is taken
     # data  -- np array of audio wave values of shape (nframes, nchannels)
 
-    window_len = len(data)
+    window_len = data.shape[0]
     
     # Pass the frames through the appropriate FFT function
     yf = np.abs(rfft(data))
@@ -24,17 +24,23 @@ def spectrogram_timestep(data, samp_rate):
 def spectrogram(data, samp_rate, window_size, stride, pad=False):
 
     # Computes spectrogram for data along numerous timesteps
-    # data          -- ndarray of audio data, np.int16 shape (nframes, channels)
+    # data          -- ndarray of audio data, np.int16 shape (nframes, [channels])
     # samp_rate     -- number of audio frames captured per second, integer
     # window_size   -- size of the window *in seconds*
     # stride        -- how many frames to proceed by in each timestep
     # pad           -- whether or not to pad data with zeros if time_steps is initially non-integer, true/false
     # Returns the range of frequencies measured and the spectrogram itself
 
+    # Ensure that audio data does not have multiple channels
+    if (data.ndim == 2):
+        data = np.mean(data, axis=1)
+    elif (data.ndim > 2):
+        return np.array([])
     sgram = []
     window_size_frames = int(window_size * samp_rate)
     stride_frames = int(stride * samp_rate)
     time_steps = (len(data) - (window_size_frames))/stride_frames + 1
+
     if (math.floor(time_steps) <= 0):
         return np.array([])
 
@@ -68,10 +74,11 @@ if DEBUG:
 
     samp_rate = 44100
     x = np.linspace(0, duration, duration * samp_rate)
-    y = 0
+    y = np.empty((x.shape[0], 2))
     for fw in freqs:
         freq, weight = fw
-        y += weight * np.sin(x * freq * 2 * np.pi)
+        y[:, 0] += weight * np.sin(x * freq * 2 * np.pi)
+    y[:, 1] = y[:, 0]
 
     y_norm = np.int16((y/y.max()) * 32737)
 
