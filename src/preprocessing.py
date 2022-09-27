@@ -15,7 +15,7 @@ def spectrogram_timestep(data, samp_rate):
     window_len = data.shape[0]
     
     # Pass the frames through the appropriate FFT function
-    yf = np.abs(rfft(data))
+    yf = np.abs(rfft(data))[::-1]
     xf = rfftfreq(window_len, 1/samp_rate)
 
     # Return spectogram embedding
@@ -36,6 +36,7 @@ def spectrogram(data, samp_rate, window_size, stride, pad=False):
         data = np.mean(data, axis=1)
     elif (data.ndim > 2):
         return np.array([])
+
     sgram = []
     window_size_frames = int(window_size * samp_rate)
     stride_frames = int(stride * samp_rate)
@@ -58,12 +59,15 @@ def spectrogram(data, samp_rate, window_size, stride, pad=False):
     
     for i in range(time_steps):
         data_window = data[i*stride_frames:window_size_frames + i*(stride_frames)]
+        # if (np.max(data_window) > 0):
+        #     data_window = (data_window/np.max(data_window))
+
         xf, yf = spectrogram_timestep(data_window, samp_rate)
         sgram.append(yf)
     
 
     if DEBUG:
-        plt.imsave("spectrogram.png", np.transpose(np.log(1+np.array(sgram))), cmap='viridis')
+        plt.imsave("spectrogram.png", np.transpose(np.log(1+np.array(sgram)/np.array(sgram).max())), cmap='viridis')
 
     return xf, np.array(sgram)
 
