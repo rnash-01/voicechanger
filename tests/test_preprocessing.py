@@ -61,6 +61,7 @@ class TestPreprocessing(unittest.TestCase):
         self.assertAlmostEqual(xf[np.argmax(mid_2)], 1450)
 
     def test_spectrogram_shape(self):
+        
         # Generate ascending tone from 100Hz to 2000Hz over 10 seconds
         SAMP_RATE = 44100
         DURATION = 10

@@ -3,9 +3,8 @@ import wave
 import numpy as np
 from data_conversion import *
 
-print(__name__)
-
 def frames_from_binary(string, file_params):
+
     channels, sampwidth = file_params
     sampwidth_bits = sampwidth * 8
     strlen = len(string)
@@ -31,12 +30,14 @@ def frames_from_binary(string, file_params):
     return frames
 
 def open_file(file):
+
     try:
         return wave.open(file)
     except:
         return None
 
 def read(file, nframes):
+
     # Gets byte data from file and converts it to numpy array
     # file  -- open Wave_read object
     # t     -- length of time in seconds to extract from file
