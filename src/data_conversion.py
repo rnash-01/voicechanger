@@ -26,7 +26,8 @@ def bytes_to_binary(data):
     }
 
     
-    hex_string = data.hex()
+    hex_string = data[::-1].hex()
+    print(hex_string[:8])
     bin_string = ""
         
     # Loop over first and second nibbles of each byte, and append each byte in a binary string format
