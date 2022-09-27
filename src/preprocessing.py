@@ -27,40 +27,51 @@ def spectrogram(data, samp_rate, window_size, stride, pad=False):
     # window_size   -- size of the window *in seconds*
     # stride        -- how many frames to proceed by in each timestep
     # pad           -- whether or not to pad data with zeros if time_steps is initially non-integer, true/false
+    # Returns the range of frequencies measured and the spectrogram itself
 
     sgram = []
     window_size_frames = int(window_size * samp_rate)
-    time_steps = (len(data) - (window_size_frames))/stride + 1
+    stride_frames = int(stride * samp_rate)
+    time_steps = (len(data) - (window_size_frames))/stride_frames + 1
     if (math.floor(time_steps) <= 0):
         return np.array([])
 
     if pad:
-        excess = int(((time_steps) - math.floor(time_steps)) * stride)
-        padding = stride - excess
-        pad_array = np.zeros((padding,) + data.shape[1:])
-        data = np.concatenate((data, pad_array), axis=0)
-        time_steps = math.ceil(time_steps)
+        print(f"Before padding: {data.shape[0]}")
+        excess = int(((time_steps) - math.floor(time_steps)) * stride_frames)
+        padding = stride_frames - excess
+        if padding < stride_frames:
+            pad_array = np.zeros((padding,) + data.shape[1:])
+            data = np.concatenate((data, pad_array), axis=0)
+            time_steps = math.ceil(time_steps)
+        else:
+            time_steps = math.floor(time_steps)
+        print(f"After: {data.shape[0]}")
     else:
         time_steps = math.floor(time_steps)
     
     for i in range(time_steps):
-        data_window = data[i*stride:window_size_frames + i*(stride)]
+        data_window = data[i*stride_frames:window_size_frames + i*(stride_frames)]
         xf, yf = spectrogram_timestep(data_window, samp_rate)
         sgram.append(yf)
+    
 
     if DEBUG:
-        plt.imsave("spectrogram.png", np.transpose(np.log(1+np.array(sgram))), cmap='inferno')
+        plt.imsave("spectrogram.png", np.transpose(np.log(1+np.array(sgram))), cmap='viridis')
 
+    return xf, np.array(sgram)
 
 if DEBUG:
     duration = 5
 
-    freq1 = 500
-    freq2 = 700
+    freqs = [(400, 0.3), (700, 0.4), (1000, 0.1), (5000, 0.2)]
 
     samp_rate = 44100
     x = np.linspace(0, duration, duration * samp_rate)
-    y = np.sin(x * freq1 * 2 * np.pi) + 0.3 * np.sin(x * freq2 * 2 * np.pi)
+    y = 0
+    for fw in freqs:
+        freq, weight = fw
+        y += weight * np.sin(x * freq * 2 * np.pi)
 
     y_norm = np.int16((y/y.max()) * 32737)
 
@@ -68,4 +79,4 @@ if DEBUG:
     plt.savefig("wave.png")
     plt.cla()
 
-    spectrogram(y_norm, samp_rate, 0.5, 200, True)
+    spectrogram(y_norm, samp_rate, 0.05, 200/44100, False)
