@@ -5,7 +5,7 @@ import set_test_env
 from audio import *
 
 # Ensure that random operations are consistent
-np.random.seed(0.0)
+np.random.seed(0)
 
 class TestAudio(unittest.TestCase):
     
