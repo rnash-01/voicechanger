@@ -1,6 +1,7 @@
 # This file contains data conversion functions to convert between bases
 
 def bytes_to_binary(data):
+
     # Converts bytes object to binary string
     if data == None or data == b'':
         return ''
@@ -35,6 +36,7 @@ def bytes_to_binary(data):
     return bin_string
 
 def binary_to_decimal(n, big_endian=False, signed=True):
+
     # Converts binary string to decimal
     if n == '':
         return 0
@@ -57,7 +59,9 @@ def binary_to_decimal(n, big_endian=False, signed=True):
     return value
 
 def decimal_to_binary(data):
+
     pass
 
 def binary_to_bytes(data):
+
     pass
