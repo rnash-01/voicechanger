@@ -4,7 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import audio
 
-DEBUG=True
+DEBUG=False
 
 def spectrogram_timestep(data, samp_rate):
     # Converts audio wave values to a spectrogram - for simplicity, average
@@ -37,7 +37,6 @@ def spectrogram(data, samp_rate, window_size, stride, pad=False):
         return np.array([])
 
     if pad:
-        print(f"Before padding: {data.shape[0]}")
         excess = int(((time_steps) - math.floor(time_steps)) * stride_frames)
         padding = stride_frames - excess
         if padding < stride_frames:
@@ -46,7 +45,6 @@ def spectrogram(data, samp_rate, window_size, stride, pad=False):
             time_steps = math.ceil(time_steps)
         else:
             time_steps = math.floor(time_steps)
-        print(f"After: {data.shape[0]}")
     else:
         time_steps = math.floor(time_steps)
     

@@ -3,8 +3,6 @@ import wave
 import numpy as np
 from data_conversion import *
 
-print(__name__)
-
 def frames_from_binary(string, file_params):
     channels, sampwidth = file_params
     sampwidth_bits = sampwidth * 8
