@@ -5,8 +5,8 @@ from data_conversion import *
 class TestDataConversion(unittest.TestCase):
     
     def test_bytes_to_binary(self):
-        self.assertEqual(bytes_to_binary(b'\x00\x01\x02\x03\x04'), '0000000000000001000000100000001100000100')
-        self.assertEqual(bytes_to_binary(b'\xff\x04'), '1111111100000100')
+        self.assertEqual(bytes_to_binary(b'\x00\x01\x02\x03\x04'), '0000010000000011000000100000000100000000')
+        self.assertEqual(bytes_to_binary(b'\xff\x04'), '0000010011111111')
         self.assertEqual(bytes_to_binary(b'\xf0'), '11110000')
         self.assertEqual(bytes_to_binary(b''), '')
         self.assertEqual(bytes_to_binary(None), '')

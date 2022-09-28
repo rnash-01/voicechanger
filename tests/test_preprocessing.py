@@ -92,4 +92,14 @@ class TestPreprocessing(unittest.TestCase):
         self.assertEqual(yf_1.shape[0], 38)
         self.assertEqual(yf_2.shape[0], 39)
 
+        # Test 3: Multiple-channel audio
+        # Generate 2 seconds of 44.1KHz audio, where two channels are involved
+        y = np.empty((x.shape[0], 2))
+        y[:, 0] = np.sin(x * 360 * 2 * np.pi)
+        y[:, 1] = np.sin(x * 720 * 2 * np.pi)
+
+        xf, yf = spectrogram(y, SAMP_RATE, 0.5, 0.25)
+        self.assertEqual(yf.ndim, 2)
+        self.assertTrue(xf[np.argmax(yf[0])] == 720 or xf[np.argmax(yf[0])] == 360)
+
 

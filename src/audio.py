@@ -25,7 +25,7 @@ def frames_from_binary(string, file_params):
         frame_string = string[i * channels * sampwidth_bits:(i+1) * channels * sampwidth_bits]
         for j in range(channels):
             channel_string = frame_string[j * sampwidth_bits:(j+1) * sampwidth_bits]
-            frames[i][j] = binary_to_decimal(channel_string)
+            frames[i][j] = binary_to_decimal(channel_string, big_endian=True)
 
     return frames
 
