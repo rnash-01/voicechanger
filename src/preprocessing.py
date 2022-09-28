@@ -16,7 +16,7 @@ def spectrogram_timestep(data, samp_rate):
     
     # Pass the frames through the appropriate FFT function
     yf = np.abs(rfft(data))[::-1]
-    xf = rfftfreq(window_len, 1/samp_rate)
+    xf = rfftfreq(window_len, 1/samp_rate)[::-1]
 
     # Return spectogram embedding
     return xf, yf
