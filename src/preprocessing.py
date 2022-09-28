@@ -35,15 +35,14 @@ def spectrogram(data, samp_rate, window_size, stride, pad=False):
     if (data.ndim == 2):
         data = np.mean(data, axis=1)
     elif (data.ndim > 2):
-        return np.array([])
+        return (np.array([]), np.array([]))
 
     sgram = []
     window_size_frames = int(window_size * samp_rate)
     stride_frames = int(stride * samp_rate)
     time_steps = (len(data) - (window_size_frames))/stride_frames + 1
-
     if (math.floor(time_steps) <= 0):
-        return np.array([])
+        return (np.array([]), np.array([]))
 
     if pad:
         excess = int(((time_steps) - math.floor(time_steps)) * stride_frames)
@@ -63,6 +62,7 @@ def spectrogram(data, samp_rate, window_size, stride, pad=False):
         #     data_window = (data_window/np.max(data_window))
 
         xf, yf = spectrogram_timestep(data_window, samp_rate)
+
         sgram.append(yf)
     
 
