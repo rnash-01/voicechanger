@@ -14,7 +14,7 @@ def create_dataset(filename, win_size, stride):
     NFRAMES = audio_file.getnframes()
     DURATION = NFRAMES/SAMP_RATE
 
-    WIN_SIZE = 0.05
+    WIN_SIZE = 2047/SAMP_RATE                                                    # So that we have 1024 bands - easier for max pooling :)z
     STRIDE = WIN_SIZE/4
 
     x = np.linspace(0, DURATION, NFRAMES)
@@ -36,7 +36,7 @@ def create_dataset(filename, win_size, stride):
         window = frames[lbound:ubound]
     
         xf, yf = spectrogram(window, SAMP_RATE, WIN_SIZE, STRIDE)
-        dataset.append(yf[:, -freq_ubound:])
+        dataset.append(np.transpose(yf))
     
     # Normalize data on a logarithmic scale
     dataset = np.array(dataset)
@@ -45,6 +45,11 @@ def create_dataset(filename, win_size, stride):
     dataset = np.log(dataset + mini)
 
     return (xf[-freq_ubound:], np.array(dataset))
+
+# xf, dataset = create_dataset('audio/raph_2.wav', 2, 0.25)
+# print(dataset[0].shape)
+
+# plt.imsave("spectrogram_real.png", dataset[0], cmap='inferno')
 
 # Footnotes
 # 1 the number contained in np.exp(x) denotes how many powers of e the resulting spectrogram values should range over.
