@@ -40,6 +40,7 @@ def spectrogram(data, samp_rate, window_size, stride, pad=False):
     sgram = []
     window_size_frames = int(window_size * samp_rate)
     stride_frames = int(stride * samp_rate)
+    print(f"helo {(data.shape[0] - window_size_frames)/stride_frames}")
     time_steps = (len(data) - (window_size_frames))/stride_frames + 1
     if (math.floor(time_steps) <= 0):
         return (np.array([]), np.array([]))

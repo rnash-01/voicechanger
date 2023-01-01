@@ -14,16 +14,20 @@ def create_dataset(filename, win_size, stride):
     NFRAMES = audio_file.getnframes()
     DURATION = NFRAMES/SAMP_RATE
 
-    WIN_SIZE = 2047/SAMP_RATE                                                    # So that we have 1024 bands - easier for max pooling :)z
-    STRIDE = WIN_SIZE/4
+    f_win_size_frames = int(win_size * SAMP_RATE)
+    f_stride_frames = int(stride * SAMP_RATE)
+
+    WIN_SIZE = 2047/SAMP_RATE                                                    # So that we have 1024 bands - easier for max pooling :)
+    STRIDE = ((f_win_size_frames - 2047)/255)/SAMP_RATE
+
+    print(f"STRIDE IS {STRIDE}")
 
     x = np.linspace(0, DURATION, NFRAMES)
     frames = read(audio_file, NFRAMES)
     dataset = []
     freq_ubound = int(10000/SAMP_RATE * ((WIN_SIZE * SAMP_RATE)/2))             # Typical human speech shouldn't really be exceeding 10000Hz
     
-    f_win_size_frames = int(win_size * SAMP_RATE)
-    f_stride_frames = int(stride * SAMP_RATE)
+
     num_examples = (len(frames) - f_win_size_frames)//f_stride_frames + 1
     num_examples = np.max([num_examples, 1])                                    # if num_examples is negative, that means the window size is 
                                                                                 # greater than the number of frames
