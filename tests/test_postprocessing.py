@@ -53,6 +53,5 @@ class TestPostprocessing(unittest.TestCase):
         output = reverse_spectrogram(input, SAMP_RATE, WINDOW_SIZE, STRIDE)
 
         self.assertLessEqual((np.abs(y.shape[0] - output.shape[0]))/y.shape[0], 0.01)
-
-
+        self.assertAlmostEqual(y[0], output[0])
 
