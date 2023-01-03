@@ -1,6 +1,7 @@
 # This file contains functions to open, read from and write to WAVE files
 import wave
 import numpy as np
+import os
 from data_conversion import *
 
 def frames_from_binary(string, file_params):
@@ -36,6 +37,21 @@ def open_file(file):
     except:
         return None
 
+def open_write(file, channels, sampwidth, framerate):
+    # file      -- name of the file to write to
+    # channels  -- number of channels of the file
+    # sampwidth -- number of bytes per frame
+    # framerate -- number of frames per second
+
+    try:
+        f = wave.open(file, 'wb')
+        f.setnchannels(channels)
+        f.setsampwidth(sampwidth)
+        f.setframerate(framerate)
+        return f
+    except:
+        return None
+
 def read(file, nframes):
 
     # Gets byte data from file and converts it to numpy array
@@ -58,3 +74,33 @@ def read(file, nframes):
         frames = None
 
     return frames
+
+def write(file, frames):
+
+    # Writes data to file
+    # file      -- open Wave_write object
+    # frames    -- buffer of decimal frame data with shape (nframes, nchannels)
+
+    # Normalise frames to sampwidth
+    sampwidth = file.getsampwidth()
+    bits = sampwidth * 8
+    max_val = 0.8 * (2**(bits-1) - 1)
+
+    data_norm = np.int32(((frames - np.min(frames))/(np.max(frames) - np.min(frames)) * 2 - 1) * max_val)
+
+    # Convert to bytes
+    byte_frames = bytearray()
+
+    for i in range(frames.shape[0]):
+        frame = data_norm[i, :]
+        hex_data = b''
+        for c in range(frames.shape[1]):
+            channel = frame[c]
+            binary_string = decimal_to_binary(channel, sampwidth, big_endian=True, signed=True)
+            hex_data += binary_to_bytes(binary_string)[::-1]
+
+        
+        # Write frame_bytes to file
+        file.writeframes(hex_data)
+    
+    

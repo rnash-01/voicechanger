@@ -15,7 +15,7 @@ def spectrogram_timestep(data, samp_rate):
     window_len = data.shape[0]
     
     # Pass the frames through the appropriate FFT function
-    yf = np.abs(rfft(data))[::-1]
+    yf = rfft(data)[::-1]
     xf = rfftfreq(window_len, 1/samp_rate)[::-1]
 
     # Return spectogram embedding
@@ -40,7 +40,6 @@ def spectrogram(data, samp_rate, window_size, stride, pad=False):
     sgram = []
     window_size_frames = int(window_size * samp_rate)
     stride_frames = int(stride * samp_rate)
-    print(f"helo {(data.shape[0] - window_size_frames)/stride_frames}")
     time_steps = (len(data) - (window_size_frames))/stride_frames + 1
     if (math.floor(time_steps) <= 0):
         return (np.array([]), np.array([]))
