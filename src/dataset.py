@@ -48,7 +48,7 @@ def create_dataset(filename, win_size, stride):
     mini = diff/(np.exp(8) - 1)                                                 # ^1
     dataset = np.log(dataset + mini)
 
-    return (xf[-freq_ubound:], np.array(dataset))
+    return (xf[-freq_ubound:], np.array(dataset), (SAMP_RATE, WIN_SIZE, STRIDE))
 
 # xf, dataset = create_dataset('audio/raph_2.wav', 2, 0.25)
 # print(dataset[0].shape)
