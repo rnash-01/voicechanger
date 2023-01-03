@@ -1,8 +1,9 @@
 # Following snippet from: https://stackoverflow.com/a/1897665
 import unittest
-from wave import Wave_read
+from wave import Wave_read, Wave_write
 import set_test_env
 from audio import *
+import os
 
 # Ensure that random operations are consistent
 np.random.seed(0)
@@ -51,6 +52,24 @@ class TestAudio(unittest.TestCase):
         file = open_file('i_don\'t_exist.wav')
         self.assertIsNone(file)
 
+    def test_open_write(self):
+
+        # Make sure it can open a file, existing or not.
+        TEST_FILE = 'assets/OPEN_WRITE_TEST_FILE.wav'
+
+        # Initially, file does not exist. On second interation, it does. Both times assertions should
+        # show it is not None
+
+        for i in range(2):
+            file = open_write('assets/WRITE_TEST_FILE.wav', 1, 2, 44100)
+            self.assertIsNotNone(file)
+            self.assertIsInstance(file, Wave_write)
+            file.close()
+        
+        # Get rid of file
+        if (os.path.exists(TEST_FILE)):
+            os.remove(TEST_FILE)
+
     def test_read(self):
         # Make sure it can read from a valid file
         file = wave.open('assets/sine.wav')
@@ -60,6 +79,28 @@ class TestAudio(unittest.TestCase):
         self.assertIsNotNone(frames)
         self.assertIsInstance(frames, np.ndarray)
         self.assertEqual(frames.shape, (1, CHANNELS))
+
+    def test_write(self):
+
+        TEST_FILE = 'assets/WRITE_TEST_FILE_SINE.wav'
+        if os.path.exists(TEST_FILE):
+            os.remove(TEST_FILE)
+        
+        DURATION = 3
+        FREQ = 1000
+        FRAMERATE = 44100
+        SAMPWIDTH = 2
+        CHANNELS = 1
+
+        x = np.linspace(0, DURATION * FREQ * 2 * np.pi, FRAMERATE * DURATION)
+        y = np.sin(x)
+        
+        y = np.reshape(y, (-1, 1))
+        print(y.shape)
+
+        f = open_write(TEST_FILE, CHANNELS, SAMPWIDTH, FRAMERATE)
+        write(f, y)
+        f.close()
 
 
 if __name__ == '__main__':
