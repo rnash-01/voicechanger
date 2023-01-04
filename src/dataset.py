@@ -40,7 +40,7 @@ def create_dataset(filename, win_size, stride):
         window = frames[lbound:ubound]
     
         xf, yf = spectrogram(window, SAMP_RATE, WIN_SIZE, STRIDE)
-        dataset.append(np.transpose(np.abs(yf)))
+        dataset.append(np.abs(yf))
     
     # Normalize data on a logarithmic scale
     dataset = np.array(dataset)
