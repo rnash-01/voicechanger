@@ -3,6 +3,7 @@
 
 # %%
 import tensorflow as tf
+tf.compat.v1.enable_eager_execution()
 
 # from https://medium.com/ibm-data-ai/memory-hygiene-with-tensorflow-during-model-training-and-deployment-for-inference-45cf49a15688
 gpus = tf.config.list_physical_devices('GPU')
@@ -34,7 +35,7 @@ print(X.shape)
 
 # %%
 POOLS = 3
-inputs = keras.Input((256, 1024, 1))
+inputs = keras.Input((256, 256, 1))
 
 # Encoder - Conv2D gradually down to LSTM
 # Conv1D didn't work as expected - instead, using conv2d but width of sliding window is 1
@@ -47,11 +48,11 @@ for i in range(POOLS):
     pool = layers.MaxPool2D((1, 2), (1, 2))(conv)   # (add)
     filter_expand = layers.Conv2D(2**(i+1), (1, 3), (1, 1), padding='same', activation='relu')(pool)
 
-lstm_input = tf.reshape(filter_expand, (-1, 256, 1024))
+lstm_input = tf.reshape(filter_expand, (-1, 256, 256))
 
-lstm = layers.LSTM(128, return_sequences=True)(lstm_input)
-dense = layers.Dense(2**10, activation='sigmoid')(lstm)
-dense_reshaped = tf.reshape(dense, (-1, 256, 1024//2**POOLS, 2**POOLS))
+lstm = layers.LSTM(5, return_sequences=True)(lstm_input)
+dense = layers.Dense(2**8, activation='sigmoid')(lstm)
+dense_reshaped = tf.reshape(dense, (-1, 256, 256//2**POOLS, 2**POOLS))
 
 conv = dense_reshaped
 for i in range(POOLS):

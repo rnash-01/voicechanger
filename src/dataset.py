@@ -17,8 +17,8 @@ def create_dataset(filename, win_size, stride):
     f_win_size_frames = int(win_size * SAMP_RATE)
     f_stride_frames = int(stride * SAMP_RATE)
 
-    WIN_SIZE = 2047/SAMP_RATE                                                    # So that we have 1024 bands - easier for max pooling :)
-    STRIDE = ((f_win_size_frames - 2047)/255)/SAMP_RATE
+    WIN_SIZE = 511/SAMP_RATE                                                    # So that we have 1024 bands - easier for max pooling :)
+    STRIDE = ((f_win_size_frames - 511)/255)/SAMP_RATE
 
     print(f"STRIDE IS {STRIDE}")
 
